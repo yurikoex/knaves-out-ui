@@ -1,0 +1,36 @@
+{
+  "name": "knaves-out-ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "del-cli dist -f",
+    "dev": "webpack --mode=development --watch",
+    "build": "npm run prebuild -s && webpack --mode=production -s",
+    "start:dev": "webpack-dev-server --mode development"
+  },
+  "keywords": [],
+  "author": "Joshua Lunsford",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/preset-env": "^7.11.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.1.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-modern-browsers": "^14.2.1",
+    "css-loader": "^4.2.1",
+    "del-cli": "^3.0.1",
+    "file-loader": "^6.0.0",
+    "haunted": "^4.7.0",
+    "html-webpack-plugin": "^4.3.0",
+    "pixi.js": "^5.3.3",
+    "style-loader": "^1.2.1",
+    "url-loader": "^4.1.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
