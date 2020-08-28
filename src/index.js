@@ -3,14 +3,20 @@ import * as PIXI from 'pixi.js'
 import Peer from 'peerjs'
 import css from './style.css'
 import './images/logo.png'
+import './images/button.png'
 import spritesheetData from './images/spritesheet.json'
 import './images/spritesheet.png'
+
+console.log(spritesheetData)
 
 const Application = PIXI.Application
 const loader = PIXI.Loader.shared
 const resources = loader.resources
 const Sprite = PIXI.Sprite
 const Spritesheet = PIXI.Spritesheet
+const NineSlicePlane = PIXI.NineSlicePlane
+
+PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
 
 PIXI.utils.TextureCache['images/logo.png']
 PIXI.utils.TextureCache['images/spritesheet.png']
@@ -250,8 +256,15 @@ const generateNewGamePlayer = ({ id, name }) => ({
     name,
     deck: getNewDeck(),
     discard: [],
-    court: [],
+    court: [
+        { type: 'knave', card: null, joker: null, tower: [] },
+        { type: 'queen', card: null, joker: null, tower: [] },
+        { type: 'king', card: null, joker: null, tower: [] },
+        { type: 'aos', card: null, joker: null, tower: [] },
+    ],
     placedLand: null,
+    order: Math.floor(Math.random() * 1000000000),
+    turns: 0,
 })
 
 const App = () => {
@@ -265,41 +278,202 @@ const App = () => {
     const [sprites, setSprites] = useState({ loaded: false })
     const [gameState, setGameState] = useState({
         running: false,
-        currentGame: null,
+        currentGame: { turns: [], players: [] },
         players: [
             {
                 id: 1,
-                name: 'bob',
+                name: 'gabe',
             },
             {
                 id: 2,
-                name: 'alice',
+                name: 'josh',
             },
             {
                 id: 3,
-                name: 'karen',
+                name: 'tyson',
             },
             {
                 id: 4,
-                name: 'kyle',
+                name: 'mikey',
             },
         ],
         mainMenuVisible: false,
     })
 
-    useEffect(() => {}, [gameState.running])
+    useEffect(() => {
+        if (gameState.running && gameState.currentGame.turns.length !== 0) {
+            const currentTurn =
+                gameState.currentGame.turns[
+                    gameState.currentGame.turns.length - 1
+                ]
+
+            if (!currentTurn.complete) {
+                const currentPlayer =
+                    gameState.currentGame.players[currentTurn.index]
+
+                const turnTextText = `End Turn`.toUpperCase()
+                const turnText = new PIXI.Text(turnTextText, {
+                    fontFamily: 'Arial',
+                    fontSize: 6,
+                    fill: 0xffffff,
+                    align: 'center',
+                })
+                turnText.anchor.set(0.0)
+
+                const debugText = `Total Turns ${currentTurn.num}
+Round: ${currentTurn.round}
+ID: ${currentPlayer.id}
+Name: ${currentPlayer.name}
+Players Turn: ${currentPlayer.turns + 1}
+Placed Land: ${currentPlayer.placedLand}
+Deck: ${currentPlayer.deck.length}
+Discard: ${currentPlayer.discard.length}
+Court In Play: ${currentPlayer.court.reduce((t, c) => (c.card ? t + 1 : t), 0)}
+Knave: ${currentPlayer.court.find((c) => c.type === 'knave').card}
+Queen: ${currentPlayer.court.find((c) => c.type === 'queen').card}
+King: ${currentPlayer.court.find((c) => c.type === 'king').card}
+Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
+                `.toUpperCase()
+                const debugStats = new PIXI.Text(debugText, {
+                    fontFamily: 'Arial',
+                    fontSize: 24,
+                    fill: 0xffffff,
+                    align: 'left',
+                })
+                debugStats.anchor.set(0)
+                debugStats.position.x = 0
+                debugStats.position.y = 0
+
+                let rotation = 0
+                const animationCancelToken = setInterval(() => {
+                    rotation = rotation <= 360 ? rotation + 1 : 0
+                    const pulseScale = Math.sin(rotation * 0.1) * 0.05 + 1
+                    turnText.scale.set(pulseScale)
+                }, 1000 / 15)
+
+                let button = new NineSlicePlane(
+                    resources.button.texture,
+                    2,
+                    2,
+                    2,
+                    2
+                )
+                button.width = 30
+                button.height = 10
+                button.scale.set(4)
+
+                button.position.x = dimensions.width / 2
+                button.position.y = dimensions.height / 2
+                button.interactive = true
+                button.buttonMode = true
+                button.on('click', (event) => {
+                    setGameState((state) => ({
+                        ...state,
+                        currentGame: {
+                            ...state.currentGame,
+                            turns: state.currentGame.turns.map((turn) => ({
+                                ...turn,
+                                complete: true,
+                            })),
+                        },
+                    }))
+                })
+
+                button.addChild(turnText)
+
+                engine.stage.addChild(button)
+                engine.stage.addChild(debugStats)
+
+                return () => {
+                    engine.stage.removeChild(button)
+                    engine.stage.removeChild(debugStats)
+                    clearInterval(animationCancelToken)
+                }
+            }
+        }
+    }, [gameState.running, gameState.currentGame.turns])
+
+    //ROTATE Turns
+    useEffect(() => {
+        if (gameState.running && gameState.currentGame.turns.length === 0) {
+            setGameState((state) => ({
+                ...state,
+                currentGame: {
+                    ...state.currentGame,
+                    turns: [
+                        {
+                            index: 0,
+                            complete: false,
+                            num: 1,
+                            round: 1,
+                        },
+                    ],
+                },
+            }))
+        } else if (
+            gameState.running &&
+            gameState.currentGame.turns[gameState.currentGame.turns.length - 1]
+                .complete
+        ) {
+            const lastTurnIndex =
+                gameState.currentGame.turns[
+                    gameState.currentGame.turns.length - 1
+                ].index
+            const lastTurnNum =
+                gameState.currentGame.turns[
+                    gameState.currentGame.turns.length - 1
+                ].num
+            const lastRound =
+                gameState.currentGame.turns[
+                    gameState.currentGame.turns.length - 1
+                ].round
+            const numPlayersZeroBased = gameState.currentGame.players.length - 1
+            setGameState((state) => ({
+                ...state,
+                currentGame: {
+                    ...state.currentGame,
+                    players: state.currentGame.players.map((player, i) =>
+                        i === lastTurnIndex
+                            ? {
+                                  ...player,
+                                  turns: player.turns + 1,
+                              }
+                            : { ...player }
+                    ),
+                    turns: [
+                        ...gameState.currentGame.turns,
+                        {
+                            index:
+                                lastTurnIndex === numPlayersZeroBased
+                                    ? 0
+                                    : lastTurnIndex + 1,
+                            complete: false,
+                            num: lastTurnNum + 1,
+                            round:
+                                lastTurnIndex === numPlayersZeroBased
+                                    ? lastRound + 1
+                                    : lastRound,
+                        },
+                    ],
+                },
+            }))
+        }
+    }, [gameState.running, gameState.currentGame.turns])
 
     const newGame = useMemo(
         () => (event) => {
+            const orderedPlayers = gameState.players
+                .map((player) => generateNewGamePlayer(player))
+                .sort((a, b) => (a.order > b.order ? -1 : 1))
             const newGameConfig = {
-                players: gameState.players.map((player) =>
-                    generateNewGamePlayer(player)
-                ),
+                players: orderedPlayers,
+                turns: [],
             }
             setGameState((state) => ({
                 ...state,
                 running: true,
                 currentGame: newGameConfig,
+                mainMenuVisible: false,
             }))
         },
         [gameState.players]
@@ -307,14 +481,16 @@ const App = () => {
 
     useEffect(() => {
         if (gameState.mainMenuVisible) {
-            console.log('SHOW MENU')
-            sprites.logo.anchor.set(0.5)
-            sprites.logo.position.x = dimensions.width / 2
-            sprites.logo.position.y = dimensions.height / 2
+            const logo = new Sprite(resources.logo.texture)
+            const board1 = new Sprite(resources.sheet.textures['board.png'])
+            const board2 = new Sprite(resources.sheet.textures['board.png'])
+
+            logo.anchor.set(0.5)
+            logo.position.x = dimensions.width / 2
+            logo.position.y = dimensions.height / 2
             const scale = dimensions.width / 5000
             const minScale = 0.27
-            sprites.logo.scale.set(scale > minScale ? scale : minScale)
-            engine.stage.addChild(sprites.logo)
+            logo.scale.set(scale > minScale ? scale : minScale)
 
             const newGameText = new PIXI.Text('New Game', {
                 fontFamily: 'Arial',
@@ -353,7 +529,6 @@ const App = () => {
                     align: 'center',
                 }
             })
-            engine.stage.addChild(newGameText)
 
             const playersText = new PIXI.Text(
                 gameState.players.length === 0
@@ -375,19 +550,37 @@ const App = () => {
                     : 600 + 50
             playersText.position.y = playersTextyPosition
 
-            engine.stage.addChild(playersText)
+            board1.anchor.set(0.5)
+            board1.scale.set(4)
+            board1.position.x = dimensions.width / 4
+            board1.position.y = dimensions.height / 4
+            board2.anchor.set(0.5)
+            board2.scale.set(4)
+            board2.position.x = (dimensions.width / 4) * 3
+            board2.position.y = dimensions.height / 4
 
-            let pulseNum = 0
-            const cancel = setInterval(() => {
-                const pulseScale = Math.sin(++pulseNum * 0.1) * 0.05 + 1
+            let rotation = 0
+            const animationCancelToken = setInterval(() => {
+                rotation = rotation <= 360 ? rotation + 1 : 0
+                const pulseScale = Math.sin(rotation * 0.1) * 0.05 + 1
                 playersText.scale.set(pulseScale)
+                board1.rotation = (Math.PI / 180) * rotation
+                board2.rotation = (Math.PI / 180) * rotation
             }, 1000 / 15)
 
+            engine.stage.addChild(logo)
+            engine.stage.addChild(newGameText)
+            engine.stage.addChild(playersText)
+            engine.stage.addChild(board1)
+            engine.stage.addChild(board2)
+
             return () => {
-                engine.stage.removeChild(sprites.logo)
+                engine.stage.removeChild(logo)
                 engine.stage.removeChild(newGameText)
                 engine.stage.removeChild(playersText)
-                clearInterval(cancel)
+                engine.stage.removeChild(board1)
+                engine.stage.removeChild(board2)
+                clearInterval(animationCancelToken)
             }
         }
     }, [dimensions, gameState.mainMenuVisible, engine, sprites.logo])
@@ -412,17 +605,9 @@ const App = () => {
             console.log('---PIXI LOADING PROGRESS', loadingProgress)
         }
         if (!loading && loadingProgress === 100) {
-            const logo = new Sprite(resources.logo.texture)
-            const spritesheet = new Spritesheet(
-                resources.logo.spritesheet,
-                spritesheetData
-            )
-            spritesheet.parse((...args) => console.log(...args))
             setSprites((state) => ({
                 ...state,
                 loaded: true,
-                logo,
-                spritesheet,
             }))
         }
     }, [loading, loadingProgress])
@@ -430,7 +615,9 @@ const App = () => {
     useEffect(() => {
         if (loading) {
             loader.add('logo', 'images/logo.png')
-            loader.add('spritesheet', 'images/spritesheet.png')
+            loader.add('sheet', './images/spritesheet.json')
+            loader.add('button', './images/button.png')
+
             loader.onProgress.add(({ progress }) =>
                 setLoadingProgress(progress)
             )

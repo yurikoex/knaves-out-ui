@@ -38,6 +38,18 @@ module.exports = {
                 ],
             },
             {
+                type: 'javascript/auto',
+                test: /\.json$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: './images/[name].[ext]',
+                        },
+                    },
+                ],
+            },
+            {
                 test: /\.(eot|svg|ttf|woff|woff2)$/,
                 use: [
                     {

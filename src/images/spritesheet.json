@@ -1,53 +1,48 @@
 {
-    "frames": [
-        {
-            "filename": "bishop.png",
+    "frames": {
+        "bishop.png": {
             "frame": { "x": 0, "y": 0, "w": 18, "h": 37 },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": { "x": 0, "y": 0, "w": 18, "h": 37 },
             "sourceSize": { "w": 18, "h": 37 }
         },
-        {
-            "filename": "blackchecker.png",
+        "blackchecker.png": {
             "frame": { "x": 0, "y": 37, "w": 18, "h": 13 },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": { "x": 0, "y": 0, "w": 18, "h": 13 },
             "sourceSize": { "w": 18, "h": 13 }
         },
-        {
-            "filename": "board.png",
+        "board.png": {
             "frame": { "x": 0, "y": 50, "w": 32, "h": 32 },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
             "sourceSize": { "w": 32, "h": 32 }
         },
-        {
-            "filename": "pawn.png",
+        "pawn.png": {
             "frame": { "x": 0, "y": 82, "w": 18, "h": 29 },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": { "x": 0, "y": 0, "w": 18, "h": 29 },
             "sourceSize": { "w": 18, "h": 29 }
         },
-        {
-            "filename": "redchecker.png",
+        "redchecker.png": {
             "frame": { "x": 0, "y": 111, "w": 18, "h": 13 },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": { "x": 0, "y": 0, "w": 18, "h": 13 },
             "sourceSize": { "w": 18, "h": 13 }
         }
-    ],
+    },
     "meta": {
         "app": "https://www.codeandweb.com/texturepacker",
         "version": "1.0",
-        "image": "images/spritesheet.png",
+        "image": "spritesheet.png",
         "format": "RGBA8888",
         "size": { "w": 32, "h": 124 },
         "scale": "1",
-        "smartupdate": "$TexturePacker:SmartUpdate:85ab4cd5085b013ba5df5608669bfb3b:d09a0349128d5dd828dc7805b5b73800:729adc6043343cfda41c447ce8f464d6$"
+        "smartupdate": "$TexturePacker:SmartUpdate:04419e14e84b7677a4ebc2f8b27b18c8:d09a0349128d5dd828dc7805b5b73800:729adc6043343cfda41c447ce8f464d6$"
     }
 }
