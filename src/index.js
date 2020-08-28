@@ -3,13 +3,17 @@ import * as PIXI from 'pixi.js'
 import Peer from 'peerjs'
 import css from './style.css'
 import './images/logo.png'
+import spritesheetData from './images/spritesheet.json'
+import './images/spritesheet.png'
 
 const Application = PIXI.Application
 const loader = PIXI.Loader.shared
 const resources = loader.resources
 const Sprite = PIXI.Sprite
+const Spritesheet = PIXI.Spritesheet
 
 PIXI.utils.TextureCache['images/logo.png']
+PIXI.utils.TextureCache['images/spritesheet.png']
 
 const getNewDeck = () => {
     let deck = [
@@ -262,7 +266,6 @@ const App = () => {
     const [gameState, setGameState] = useState({
         running: false,
         currentGame: null,
-        connectedPlayers: [],
         players: [
             {
                 id: 1,
@@ -284,6 +287,8 @@ const App = () => {
         mainMenuVisible: false,
     })
 
+    useEffect(() => {}, [gameState.running])
+
     const newGame = useMemo(
         () => (event) => {
             const newGameConfig = {
@@ -291,6 +296,11 @@ const App = () => {
                     generateNewGamePlayer(player)
                 ),
             }
+            setGameState((state) => ({
+                ...state,
+                running: true,
+                currentGame: newGameConfig,
+            }))
         },
         [gameState.players]
     )
@@ -403,13 +413,24 @@ const App = () => {
         }
         if (!loading && loadingProgress === 100) {
             const logo = new Sprite(resources.logo.texture)
-            setSprites((state) => ({ ...state, loaded: true, logo }))
+            const spritesheet = new Spritesheet(
+                resources.logo.spritesheet,
+                spritesheetData
+            )
+            spritesheet.parse((...args) => console.log(...args))
+            setSprites((state) => ({
+                ...state,
+                loaded: true,
+                logo,
+                spritesheet,
+            }))
         }
     }, [loading, loadingProgress])
 
     useEffect(() => {
         if (loading) {
             loader.add('logo', 'images/logo.png')
+            loader.add('spritesheet', 'images/spritesheet.png')
             loader.onProgress.add(({ progress }) =>
                 setLoadingProgress(progress)
             )
@@ -423,7 +444,7 @@ const App = () => {
 
     useEffect(() => {
         if (engine) {
-            console.log('---RESIZING PIXI')
+            // console.log('---RESIZING PIXI')
             engine.renderer.resize(dimensions.width, dimensions.height)
         }
     }, [engine, dimensions])
