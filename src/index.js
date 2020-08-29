@@ -1,7 +1,9 @@
 import { component, useState, useEffect, State, useMemo } from 'haunted'
 import * as PIXI from 'pixi.js'
+import { CRTFilter } from '@pixi/filter-crt'
 import Peer from 'peerjs'
 import css from './style.css'
+import './images/KnavesOutLogo.png'
 import './images/logo.png'
 import './images/button.png'
 import spritesheetData from './images/spritesheet.json'
@@ -13,8 +15,8 @@ const Application = PIXI.Application
 const loader = PIXI.Loader.shared
 const resources = loader.resources
 const Sprite = PIXI.Sprite
-const Spritesheet = PIXI.Spritesheet
 const NineSlicePlane = PIXI.NineSlicePlane
+const Graphics = PIXI.Graphics
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
 
@@ -257,10 +259,10 @@ const generateNewGamePlayer = ({ id, name }) => ({
     deck: getNewDeck(),
     discard: [],
     court: [
-        { type: 'knave', card: null, joker: null, tower: [] },
-        { type: 'queen', card: null, joker: null, tower: [] },
-        { type: 'king', card: null, joker: null, tower: [] },
-        { type: 'aos', card: null, joker: null, tower: [] },
+        { type: 'knave', card: null, joker: null, devoured: [], tower: [] },
+        { type: 'queen', card: null, joker: null, devoured: [], tower: [] },
+        { type: 'king', card: null, joker: null, devoured: [], tower: [] },
+        { type: 'aos', card: null, joker: null, devoured: [], tower: [] },
     ],
     placedLand: null,
     order: Math.floor(Math.random() * 1000000000),
@@ -269,6 +271,7 @@ const generateNewGamePlayer = ({ id, name }) => ({
 
 const App = () => {
     const [engine, setEngine] = useState(null)
+    const [stage, setStage] = useState(null)
     const [dimensions, setDimensions] = useState({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -311,14 +314,26 @@ const App = () => {
                 const currentPlayer =
                     gameState.currentGame.players[currentTurn.index]
 
-                const turnTextText = `End Turn`.toUpperCase()
-                const turnText = new PIXI.Text(turnTextText, {
-                    fontFamily: 'Arial',
-                    fontSize: 6,
-                    fill: 0xffffff,
-                    align: 'center',
-                })
-                turnText.anchor.set(0.0)
+                const grid = new Graphics()
+                grid.lineStyle(4, 0xffffff, 1)
+                for (
+                    var y = 0;
+                    y < gameState.currentGame.players.length * 10;
+                    y++
+                ) {
+                    for (
+                        var x = 0;
+                        x < gameState.currentGame.players.length * 10;
+                        x++
+                    ) {
+                        grid.drawRect(x * 20, y * 20, 20, 20)
+                    }
+                }
+
+                grid.scale.set(1)
+
+                grid.position.x = dimensions.width / 2 - grid.width / 2
+                grid.position.y = dimensions.height / 2 - grid.height / 2
 
                 const debugText = `Total Turns ${currentTurn.num}
 Round: ${currentTurn.round}
@@ -335,21 +350,23 @@ King: ${currentPlayer.court.find((c) => c.type === 'king').card}
 Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
                 `.toUpperCase()
                 const debugStats = new PIXI.Text(debugText, {
-                    fontFamily: 'Arial',
+                    fontFamily: 'Fira Code',
                     fontSize: 24,
                     fill: 0xffffff,
                     align: 'left',
                 })
                 debugStats.anchor.set(0)
-                debugStats.position.x = 0
-                debugStats.position.y = 0
+                debugStats.position.x = 10
+                debugStats.position.y = 10
 
-                let rotation = 0
-                const animationCancelToken = setInterval(() => {
-                    rotation = rotation <= 360 ? rotation + 1 : 0
-                    const pulseScale = Math.sin(rotation * 0.1) * 0.05 + 1
-                    turnText.scale.set(pulseScale)
-                }, 1000 / 15)
+                const buttonContainer = new Graphics()
+
+                buttonContainer.lineStyle(4, 0xffd900, 1)
+                buttonContainer.drawRect(0, 0, 120, 40)
+
+                buttonContainer.position.x =
+                    dimensions.width / 2 - buttonContainer.width / 2
+                buttonContainer.position.y = dimensions.height - 100
 
                 let button = new NineSlicePlane(
                     resources.button.texture,
@@ -362,8 +379,9 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
                 button.height = 10
                 button.scale.set(4)
 
-                button.position.x = dimensions.width / 2
-                button.position.y = dimensions.height / 2
+                button.position.x = 0
+                button.position.y = 0
+
                 button.interactive = true
                 button.buttonMode = true
                 button.on('click', (event) => {
@@ -379,19 +397,39 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
                     }))
                 })
 
-                button.addChild(turnText)
+                const turnTextText = `End Turn`.toUpperCase()
+                const turnText = new PIXI.Text(turnTextText, {
+                    fontFamily: 'Fira Code',
+                    fontSize: 20,
+                    fill: 0x000000,
+                    align: 'center',
+                })
+                turnText.anchor.set(0.0)
+                turnText.position.x = 10
+                turnText.position.y = 10
 
-                engine.stage.addChild(button)
+                buttonContainer.addChild(button)
+                buttonContainer.addChild(turnText)
+                engine.stage.addChild(grid)
+                engine.stage.addChild(buttonContainer)
                 engine.stage.addChild(debugStats)
 
+                let rotation = 0
+                const animationCancelToken = setInterval(() => {
+                    rotation = rotation <= 360 ? rotation + 1 : 0
+                    const pulseScale = Math.sin(rotation * 0.1) * 0.05 + 1
+                    // turnText.scale.set(pulseScale)
+                }, 1000 / 15)
+
                 return () => {
-                    engine.stage.removeChild(button)
+                    engine.stage.removeChild(grid)
+                    engine.stage.removeChild(buttonContainer)
                     engine.stage.removeChild(debugStats)
                     clearInterval(animationCancelToken)
                 }
             }
         }
-    }, [gameState.running, gameState.currentGame.turns])
+    }, [gameState.running, gameState.currentGame.turns, dimensions])
 
     //ROTATE Turns
     useEffect(() => {
@@ -488,12 +526,13 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
             logo.anchor.set(0.5)
             logo.position.x = dimensions.width / 2
             logo.position.y = dimensions.height / 2
-            const scale = dimensions.width / 5000
-            const minScale = 0.27
+            const scaleMultiplier = 6
+            const scale = (dimensions.width / 6000) * scaleMultiplier
+            const minScale = 0.27 * scaleMultiplier
             logo.scale.set(scale > minScale ? scale : minScale)
 
             const newGameText = new PIXI.Text('New Game', {
-                fontFamily: 'Arial',
+                fontFamily: 'Fira Code',
                 fontSize: 24,
                 fill: 0xffffff,
                 align: 'center',
@@ -503,8 +542,11 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
             newGameText.position.x = dimensions.width / 2
             const yPosition =
                 scale > minScale
-                    ? dimensions.height / 2 + 138.5 - 81 + scale * 300
-                    : 600
+                    ? dimensions.height / 2 +
+                      138.5 -
+                      81 +
+                      ((scale * 300) / scaleMultiplier) * 1.2
+                    : 630
             newGameText.position.y = yPosition
             newGameText.interactive = true
             newGameText.cursor = 'pointer'
@@ -514,7 +556,7 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
 
             newGameText.on('mouseover', (event) => {
                 newGameText.style = {
-                    fontFamily: 'Arial',
+                    fontFamily: 'Fira Code',
                     fontSize: 24,
                     fill: 0xff0000,
                     align: 'center',
@@ -523,7 +565,7 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
 
             newGameText.on('mouseout', (event) => {
                 newGameText.style = {
-                    fontFamily: 'Arial',
+                    fontFamily: 'Fira Code',
                     fontSize: 24,
                     fill: 0xffffff,
                     align: 'center',
@@ -544,11 +586,8 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
 
             playersText.anchor.set(0.5)
             playersText.position.x = dimensions.width / 2
-            const playersTextyPosition =
-                scale > minScale
-                    ? dimensions.height / 2 + 138.5 + 50 - 81 + scale * 300
-                    : 600 + 50
-            playersText.position.y = playersTextyPosition
+
+            playersText.position.y = newGameText.position.y + 30
 
             board1.anchor.set(0.5)
             board1.scale.set(4)
@@ -568,18 +607,18 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
                 board2.rotation = (Math.PI / 180) * rotation
             }, 1000 / 15)
 
-            engine.stage.addChild(logo)
-            engine.stage.addChild(newGameText)
-            engine.stage.addChild(playersText)
-            engine.stage.addChild(board1)
-            engine.stage.addChild(board2)
+            stage.addChild(logo)
+            stage.addChild(newGameText)
+            stage.addChild(playersText)
+            stage.addChild(board1)
+            stage.addChild(board2)
 
             return () => {
-                engine.stage.removeChild(logo)
-                engine.stage.removeChild(newGameText)
-                engine.stage.removeChild(playersText)
-                engine.stage.removeChild(board1)
-                engine.stage.removeChild(board2)
+                stage.removeChild(logo)
+                stage.removeChild(newGameText)
+                stage.removeChild(playersText)
+                stage.removeChild(board1)
+                stage.removeChild(board2)
                 clearInterval(animationCancelToken)
             }
         }
@@ -614,7 +653,8 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
 
     useEffect(() => {
         if (loading) {
-            loader.add('logo', 'images/logo.png')
+            loader.add('logo', 'images/KnavesOutLogo.png')
+            loader.add('_logo', 'images/logo.png')
             loader.add('sheet', './images/spritesheet.json')
             loader.add('button', './images/button.png')
 
@@ -633,6 +673,8 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
         if (engine) {
             // console.log('---RESIZING PIXI')
             engine.renderer.resize(dimensions.width, dimensions.height)
+            stage.width = dimensions.width
+            stage.height = dimensions.height
         }
     }, [engine, dimensions])
 
@@ -653,7 +695,19 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
             height: dimensions.height,
             autoResize: true,
         })
+        _engine.stage.filters = [
+            new CRTFilter({
+                curvature: 100,
+                // lineContrast: 0.5,
+                lineWidth: 10,
+                noise: 0.5,
+                time: 1000000,
+            }),
+        ]
         document.body.appendChild(_engine.view)
+        const stage = new PIXI.Container()
+        _engine.stage.addChild(stage)
+        setStage(stage)
         setEngine(_engine)
     }, [])
 
