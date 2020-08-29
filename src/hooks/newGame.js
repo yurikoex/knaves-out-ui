@@ -258,13 +258,13 @@ export default (gameState, setGameState) =>
             const newGameConfig = {
                 players: orderedPlayers,
                 turns: [],
+                worldSize: orderedPlayers.length * 10,
             }
             setGameState((state) => ({
                 ...state,
                 running: true,
                 currentGame: newGameConfig,
                 mainMenuVisible: false,
-                worldSize: newGameConfig.players.length * 10,
             }))
         },
         [gameState.players]

@@ -13,7 +13,7 @@ Court In Play: ${currentPlayer.court.reduce((t, c) => (c.card ? t + 1 : t), 0)}
 Knave: ${currentPlayer.court.find((c) => c.type === 'knave').card}
 Queen: ${currentPlayer.court.find((c) => c.type === 'queen').card}
 King: ${currentPlayer.court.find((c) => c.type === 'king').card}
-Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
+AOS: ${currentPlayer.court.find((c) => c.type === 'aos').card}
                 `.toUpperCase()
     const debugStats = new Text(debugText, {
         fontFamily: 'Fira Code',
@@ -25,7 +25,7 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
     debugStats.position.x = 10
     debugStats.position.y = 10
     const statsScale = dimensions.width / dimensions.height - 0.5
-    console.log(statsScale)
+    // console.log(statsScale)
     debugStats.scale.set(
         statsScale > 1 ? 1 : statsScale < 0.5 ? 0.5 : statsScale
     )
