@@ -11,7 +11,6 @@ import '../images/spritesheet.json'
 utils.TextureCache['images/KnavesOutLogo.png']
 utils.TextureCache['images/KnaveHearts.png']
 utils.TextureCache['images/spritesheet.png']
-utils.TextureCache['images/logo.png']
 utils.TextureCache['images/button.png']
 
 export default (loading, setLoadingProgress, setLoading) => {
@@ -19,7 +18,6 @@ export default (loading, setLoadingProgress, setLoading) => {
         if (loading) {
             loader.add('knaveHearts', 'images/KnaveHearts.png')
             loader.add('logo', 'images/KnavesOutLogo.png')
-            loader.add('_logo', 'images/logo.png')
             loader.add('sheet', './images/spritesheet.json')
             loader.add('button', './images/button.png')
 
