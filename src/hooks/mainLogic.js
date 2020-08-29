@@ -1,6 +1,9 @@
 import { useEffect } from 'haunted'
+import { Graphics, Text, NineSlicePlane, Loader } from 'pixi.js'
+const loader = Loader.shared
+const resources = loader.resources
 
-export default (gameState, dimensions) => {
+export default (gameState, dimensions, engine, setGameState) => {
     useEffect(() => {
         if (gameState.running && gameState.currentGame.turns.length !== 0) {
             const currentTurn =
@@ -41,7 +44,7 @@ Queen: ${currentPlayer.court.find((c) => c.type === 'queen').card}
 King: ${currentPlayer.court.find((c) => c.type === 'king').card}
 Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
                 `.toUpperCase()
-                const debugStats = new PIXI.Text(debugText, {
+                const debugStats = new Text(debugText, {
                     fontFamily: 'Fira Code',
                     fontSize: 24,
                     fill: 0xffffff,
@@ -90,7 +93,7 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
                 })
 
                 const turnTextText = `End Turn`.toUpperCase()
-                const turnText = new PIXI.Text(turnTextText, {
+                const turnText = new Text(turnTextText, {
                     fontFamily: 'Fira Code',
                     fontSize: 20,
                     fill: 0x000000,
@@ -121,5 +124,5 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
                 }
             }
         }
-    }, [gameState.running, gameState.currentGame.turns, dimensions])
+    }, [gameState.running, gameState.currentGame.turns, engine, dimensions])
 }

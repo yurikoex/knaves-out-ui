@@ -1,5 +1,5 @@
 import { useEffect } from 'haunted'
-import { Loader } from 'pixi.js'
+import { Loader, utils } from 'pixi.js'
 const loader = Loader.shared
 
 import '../images/KnavesOutLogo.png'
@@ -7,6 +7,9 @@ import '../images/KnaveHearts.png'
 import '../images/logo.png'
 import '../images/button.png'
 import '../images/spritesheet.png'
+
+utils.TextureCache['images/logo.png']
+utils.TextureCache['images/spritesheet.png']
 
 export default (loading, setLoadingProgress, setLoading) => {
     useEffect(() => {

@@ -1,7 +1,9 @@
 import { component, useState, useEffect, State, useMemo } from 'haunted'
 import * as PIXI from 'pixi.js'
 import Peer from 'peerjs'
-import css from './style.css'
+import './style.css'
+
+import useKnavesOutState from './state'
 
 import useInit from './hooks/init'
 import useResize from './hooks/resize'
@@ -12,53 +14,25 @@ import useGameStartup from './hooks/gameStartup'
 import useMainMenu from './hooks/mainMenu'
 import useNewGame from './hooks/newGame'
 import useTurns from './hooks/turns'
-
-const Application = PIXI.Application
-const loader = PIXI.Loader.shared
-const resources = loader.resources
-const Sprite = PIXI.Sprite
-const NineSlicePlane = PIXI.NineSlicePlane
-const Graphics = PIXI.Graphics
-
-PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
-
-PIXI.utils.TextureCache['images/logo.png']
-PIXI.utils.TextureCache['images/spritesheet.png']
+import useMainLogic from './hooks/mainLogic'
 
 const App = () => {
-    const [engine, setEngine] = useState(null)
-    // const [stage, setStage] = useState(null)
-    const [dimensions, setDimensions] = useState({
-        width: window.innerWidth,
-        height: window.innerHeight,
-    })
-    const [loading, setLoading] = useState(true)
-    const [loadingProgress, setLoadingProgress] = useState(0)
-    const [sprites, setSprites] = useState({ loaded: false })
-    const [gameState, setGameState] = useState({
-        running: false,
-        currentGame: { turns: [], players: [] },
-        players: [
-            {
-                id: 1,
-                name: 'gabe',
-            },
-            {
-                id: 2,
-                name: 'josh',
-            },
-            {
-                id: 3,
-                name: 'tyson',
-            },
-            {
-                id: 4,
-                name: 'mikey',
-            },
-        ],
-        mainMenuVisible: false,
-    })
+    const {
+        engine,
+        setEngine,
+        dimensions,
+        setDimensions,
+        loading,
+        setLoading,
+        loadingProgress,
+        setLoadingProgress,
+        sprites,
+        setSprites,
+        gameState,
+        setGameState,
+    } = useKnavesOutState()
 
+    useMainLogic(gameState, dimensions, engine, setGameState)
     useTurns(gameState, setGameState)
 
     const newGame = useNewGame(gameState, setGameState)

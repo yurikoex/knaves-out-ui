@@ -1,6 +1,8 @@
 import { useEffect } from 'haunted'
-import { Application } from 'pixi.js'
+import { Application, settings, SCALE_MODES } from 'pixi.js'
 import { CRTFilter } from '@pixi/filter-crt'
+
+settings.SCALE_MODE = SCALE_MODES.NEAREST
 
 export default (setEngine, dimensions) => {
     useEffect(() => {
