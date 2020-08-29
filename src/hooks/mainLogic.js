@@ -3,6 +3,9 @@ import { Graphics, Text, NineSlicePlane, Loader } from 'pixi.js'
 const loader = Loader.shared
 const resources = loader.resources
 
+import debugStats from './sprites/debugStats'
+import world from './sprites/world'
+
 export default (gameState, dimensions, engine, setGameState) => {
     useEffect(() => {
         if (gameState.running && gameState.currentGame.turns.length !== 0) {
@@ -15,44 +18,13 @@ export default (gameState, dimensions, engine, setGameState) => {
                 const currentPlayer =
                     gameState.currentGame.players[currentTurn.index]
 
-                const gridSize = gameState.currentGame.players.length * 10
+                const worldSprite = world(gameState, dimensions)
 
-                const grid = new Graphics()
-                grid.lineStyle(4, 0xffffff, 1)
-                for (var y = 0; y < gridSize; y++) {
-                    for (var x = 0; x < gridSize; x++) {
-                        grid.drawRect(x * 20, y * 20, 20, 20)
-                    }
-                }
-
-                grid.scale.set(1)
-
-                grid.position.x = dimensions.width / 2 - grid.width / 2
-                grid.position.y = dimensions.height / 2 - grid.height / 2
-
-                const debugText = `Total Turns ${currentTurn.num}
-Round: ${currentTurn.round}
-ID: ${currentPlayer.id}
-Name: ${currentPlayer.name}
-Players Turn: ${currentPlayer.turns + 1}
-Placed Land: ${currentPlayer.placedLand}
-Deck: ${currentPlayer.deck.length}
-Discard: ${currentPlayer.discard.length}
-Court In Play: ${currentPlayer.court.reduce((t, c) => (c.card ? t + 1 : t), 0)}
-Knave: ${currentPlayer.court.find((c) => c.type === 'knave').card}
-Queen: ${currentPlayer.court.find((c) => c.type === 'queen').card}
-King: ${currentPlayer.court.find((c) => c.type === 'king').card}
-Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
-                `.toUpperCase()
-                const debugStats = new Text(debugText, {
-                    fontFamily: 'Fira Code',
-                    fontSize: 24,
-                    fill: 0xffffff,
-                    align: 'left',
-                })
-                debugStats.anchor.set(0)
-                debugStats.position.x = 10
-                debugStats.position.y = 10
+                const debugStatsSprite = debugStats(
+                    currentTurn,
+                    currentPlayer,
+                    dimensions
+                )
 
                 const buttonContainer = new Graphics()
 
@@ -105,9 +77,9 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
 
                 buttonContainer.addChild(button)
                 buttonContainer.addChild(turnText)
-                engine.stage.addChild(grid)
+                engine.stage.addChild(worldSprite)
                 engine.stage.addChild(buttonContainer)
-                engine.stage.addChild(debugStats)
+                engine.stage.addChild(debugStatsSprite)
 
                 let rotation = 0
                 const animationCancelToken = setInterval(() => {
@@ -117,9 +89,9 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'aos').card}
                 }, 1000 / 15)
 
                 return () => {
-                    engine.stage.removeChild(grid)
+                    engine.stage.removeChild(worldSprite)
                     engine.stage.removeChild(buttonContainer)
-                    engine.stage.removeChild(debugStats)
+                    engine.stage.removeChild(debugStatsSprite)
                     clearInterval(animationCancelToken)
                 }
             }

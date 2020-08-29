@@ -4,16 +4,20 @@ const loader = Loader.shared
 
 import '../images/KnavesOutLogo.png'
 import '../images/KnaveHearts.png'
-import '../images/logo.png'
 import '../images/button.png'
 import '../images/spritesheet.png'
+import '../images/spritesheet.json'
 
-utils.TextureCache['images/logo.png']
+utils.TextureCache['images/KnavesOutLogo.png']
+utils.TextureCache['images/KnaveHearts.png']
 utils.TextureCache['images/spritesheet.png']
+utils.TextureCache['images/logo.png']
+utils.TextureCache['images/button.png']
 
 export default (loading, setLoadingProgress, setLoading) => {
     useEffect(() => {
         if (loading) {
+            loader.add('knaveHearts', 'images/KnaveHearts.png')
             loader.add('logo', 'images/KnavesOutLogo.png')
             loader.add('_logo', 'images/logo.png')
             loader.add('sheet', './images/spritesheet.json')

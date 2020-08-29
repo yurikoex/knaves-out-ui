@@ -244,6 +244,9 @@ const generateNewGamePlayer = ({ id, name }) => ({
     placedLand: null,
     order: Math.floor(Math.random() * 1000000000),
     turns: 0,
+    worldZoomLevel: 0,
+    worldOffsetX: 0,
+    worldOffsetY: 0,
 })
 
 export default (gameState, setGameState) =>
@@ -261,6 +264,7 @@ export default (gameState, setGameState) =>
                 running: true,
                 currentGame: newGameConfig,
                 mainMenuVisible: false,
+                worldSize: newGameConfig.players.length * 10,
             }))
         },
         [gameState.players]
