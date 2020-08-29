@@ -1,5 +1,4 @@
-import { component, useState, useEffect, State, useMemo } from 'haunted'
-import * as PIXI from 'pixi.js'
+import { component } from 'haunted'
 import Peer from 'peerjs'
 import './style.css'
 
@@ -36,21 +35,13 @@ const App = () => {
     useTurns(gameState, setGameState)
 
     const newGame = useNewGame(gameState, setGameState)
-
     useMainMenu(dimensions, gameState, engine, sprites, newGame)
-
     useGameStartup(gameState, loadingProgress, loading, sprites, setGameState)
-
     useLoaded(loading, loadingProgress, setSprites)
-
     useLoader(loading, setLoadingProgress, setLoading)
-
     useResponsive(engine, dimensions)
-
     useResize(setDimensions)
-
     useInit(setEngine, dimensions)
-
     return null
 }
 customElements.define('knaves-out', component(App))
