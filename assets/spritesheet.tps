@@ -26,13 +26,13 @@
             </struct>
         </array>
         <key>allowRotation</key>
-        <true/>
+        <false/>
         <key>shapeDebug</key>
         <false/>
         <key>dpi</key>
         <uint>72</uint>
         <key>dataFormat</key>
-        <string>spritesheet-only</string>
+        <string>pixijs4</string>
         <key>textureFileName</key>
         <filename></filename>
         <key>flipPVR</key>
@@ -102,13 +102,13 @@
         <key>algorithmSettings</key>
         <struct type="AlgorithmSettings">
             <key>algorithm</key>
-            <enum type="AlgorithmSettings::AlgorithmId">Basic</enum>
+            <enum type="AlgorithmSettings::AlgorithmId">MaxRects</enum>
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
             <enum type="AlgorithmSettings::SizeConstraints">AnySize</enum>
             <key>forceSquared</key>
-            <false/>
+            <true/>
             <key>maxRects</key>
             <struct type="AlgorithmMaxRectsSettings">
                 <key>heuristic</key>
@@ -128,7 +128,13 @@
             </struct>
         </struct>
         <key>dataFileNames</key>
-        <map type="GFileNameMap"/>
+        <map type="GFileNameMap">
+            <key>data</key>
+            <struct type="DataFile">
+                <key>name</key>
+                <filename>spritesheet.json</filename>
+            </struct>
+        </map>
         <key>multiPack</key>
         <false/>
         <key>forceIdenticalLayout</key>
@@ -169,16 +175,96 @@
             <key>heuristicMask</key>
             <false/>
             <key>defaultPivotPoint</key>
-            <point_f>0.5,0.5</point_f>
+            <point_f>0,0</point_f>
             <key>writePivotPoints</key>
             <false/>
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">BlankCard.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>7,11,13,23</rect>
+                <key>scale9Paddings</key>
+                <rect>7,11,13,23</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">IceQueen.png</key>
+            <key type="filename">Kin-Clu.png</key>
+            <key type="filename">Kin-Dia.png</key>
+            <key type="filename">Kin-Hea.png</key>
+            <key type="filename">Kin-Spa.png</key>
+            <key type="filename">KingCrimson.png</key>
+            <key type="filename">Kna-Clu.png</key>
+            <key type="filename">Kna-Dia.png</key>
+            <key type="filename">Kna-Hea.png</key>
+            <key type="filename">Kna-Spa.png</key>
+            <key type="filename">LadyLuck.png</key>
+            <key type="filename">Lemmy.png</key>
+            <key type="filename">LichKing.png</key>
+            <key type="filename">Que-Clu.png</key>
+            <key type="filename">Que-Dia.png</key>
+            <key type="filename">Que-Hea.png</key>
+            <key type="filename">Que-Spa.png</key>
+            <key type="filename">SHA.png</key>
+            <key type="filename">T-IceQueen.png</key>
+            <key type="filename">T-Kin-Clu.png</key>
+            <key type="filename">T-Kin-Dia.png</key>
+            <key type="filename">T-Kin-Hea.png</key>
+            <key type="filename">T-Kin-Spa.png</key>
+            <key type="filename">T-KingCrimson.png</key>
+            <key type="filename">T-Kna-Clu.png</key>
+            <key type="filename">T-Kna-Dia.png</key>
+            <key type="filename">T-Kna-Hea.png</key>
+            <key type="filename">T-Kna-Spa.png</key>
+            <key type="filename">T-LadyLuck.png</key>
+            <key type="filename">T-Lemmy.png</key>
+            <key type="filename">T-LichKing.png</key>
+            <key type="filename">T-Que-Clu.png</key>
+            <key type="filename">T-Que-Dia.png</key>
+            <key type="filename">T-Que-Hea.png</key>
+            <key type="filename">T-Que-Spa.png</key>
+            <key type="filename">T-SHA.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,7,13,14</rect>
+                <key>scale9Paddings</key>
+                <rect>6,7,13,14</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">Joker.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,12,23,23</rect>
+                <key>scale9Paddings</key>
+                <rect>12,12,23,23</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">bishop.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>spriteScale</key>
                 <double>1</double>
                 <key>scale9Enabled</key>
@@ -194,7 +280,7 @@
             <key type="filename">redchecker.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>spriteScale</key>
                 <double>1</double>
                 <key>scale9Enabled</key>
@@ -209,7 +295,7 @@
             <key type="filename">board.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>spriteScale</key>
                 <double>1</double>
                 <key>scale9Enabled</key>
@@ -218,13 +304,43 @@
                 <rect>8,8,16,16</rect>
                 <key>scale9Paddings</key>
                 <rect>8,8,16,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">king.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>5,11,9,22</rect>
+                <key>scale9Paddings</key>
+                <rect>5,11,9,22</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">knight.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>5,9,9,17</rect>
+                <key>scale9Paddings</key>
+                <rect>5,9,9,17</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
             <key type="filename">pawn.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>spriteScale</key>
                 <double>1</double>
                 <key>scale9Enabled</key>
@@ -236,14 +352,86 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">queen.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>5,11,9,21</rect>
+                <key>scale9Paddings</key>
+                <rect>5,11,9,21</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">rook.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>5,8,9,17</rect>
+                <key>scale9Paddings</key>
+                <rect>5,8,9,17</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
         </map>
         <key>fileList</key>
         <array>
+            <filename>BlankCard.png</filename>
+            <filename>IceQueen.png</filename>
+            <filename>Joker.png</filename>
+            <filename>Kin-Clu.png</filename>
+            <filename>Kin-Dia.png</filename>
+            <filename>Kin-Hea.png</filename>
+            <filename>Kin-Spa.png</filename>
+            <filename>KingCrimson.png</filename>
+            <filename>Kna-Clu.png</filename>
+            <filename>Kna-Dia.png</filename>
+            <filename>Kna-Hea.png</filename>
+            <filename>Kna-Spa.png</filename>
+            <filename>LadyLuck.png</filename>
+            <filename>Lemmy.png</filename>
+            <filename>LichKing.png</filename>
+            <filename>Que-Clu.png</filename>
+            <filename>Que-Dia.png</filename>
+            <filename>Que-Hea.png</filename>
+            <filename>Que-Spa.png</filename>
+            <filename>SHA.png</filename>
+            <filename>T-IceQueen.png</filename>
+            <filename>T-Kin-Clu.png</filename>
+            <filename>T-Kin-Dia.png</filename>
+            <filename>T-Kin-Hea.png</filename>
+            <filename>T-Kin-Spa.png</filename>
+            <filename>T-KingCrimson.png</filename>
+            <filename>T-Kna-Clu.png</filename>
+            <filename>T-Kna-Dia.png</filename>
+            <filename>T-Kna-Hea.png</filename>
+            <filename>T-Kna-Spa.png</filename>
+            <filename>T-LadyLuck.png</filename>
+            <filename>T-Lemmy.png</filename>
+            <filename>T-LichKing.png</filename>
+            <filename>T-Que-Clu.png</filename>
+            <filename>T-Que-Dia.png</filename>
+            <filename>T-Que-Hea.png</filename>
+            <filename>T-Que-Spa.png</filename>
+            <filename>T-SHA.png</filename>
             <filename>bishop.png</filename>
             <filename>blackchecker.png</filename>
             <filename>board.png</filename>
             <filename>pawn.png</filename>
             <filename>redchecker.png</filename>
+            <filename>king.png</filename>
+            <filename>knight.png</filename>
+            <filename>queen.png</filename>
+            <filename>rook.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

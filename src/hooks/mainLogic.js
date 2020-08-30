@@ -8,6 +8,8 @@ import world from './sprites/world'
 import endTurn from './sprites/endTurn'
 
 export default (gameState, dimensions, engine, setGameState) => {
+    useEffect(() => {}, [])
+
     useEffect(() => {
         if (gameState.running && gameState.currentGame.turns.length !== 0) {
             const currentTurn =
@@ -19,7 +21,39 @@ export default (gameState, dimensions, engine, setGameState) => {
                 const currentPlayer =
                     gameState.currentGame.players[currentTurn.index]
 
-                const worldSprite = world(gameState, dimensions, setGameState)
+                const currentPlayerWorldZoomLevel = currentPlayer.worldZoomLevel
+
+                const mouseWheelListener = ({ deltaY }) => {
+                    const newZoom = currentPlayerWorldZoomLevel + deltaY * 0.01
+
+                    console.log(newZoom, currentPlayerWorldZoomLevel, deltaY)
+                    setGameState((state) => ({
+                        ...state,
+                        currentGame: {
+                            ...state.currentGame,
+                            players: state.currentGame.players.map((player) =>
+                                player.id === currentPlayer.id
+                                    ? {
+                                          ...player,
+                                          worldZoomLevel: newZoom,
+                                      }
+                                    : { ...player }
+                            ),
+                        },
+                    }))
+                }
+
+                const scopedMouseWheelListener = (events) =>
+                    mouseWheelListener(events)
+                window.addEventListener('wheel', scopedMouseWheelListener)
+
+                const worldSprite = world({
+                    gameState,
+                    dimensions,
+                    setGameState,
+                    currentPlayer,
+                    currentPlayerWorldZoomLevel,
+                })
 
                 const debugStatsSprite = debugStats(
                     currentTurn,
@@ -41,8 +75,18 @@ export default (gameState, dimensions, engine, setGameState) => {
                     engine.stage.removeChild(worldSprite)
                     engine.stage.removeChild(endTurnSprite)
                     engine.stage.removeChild(debugStatsSprite)
+                    window.removeEventListener(
+                        'wheel',
+                        scopedMouseWheelListener
+                    )
                 }
             }
         }
-    }, [gameState.running, gameState.currentGame.turns, engine, dimensions])
+    }, [
+        gameState.running,
+        gameState.currentGame.turns,
+        gameState.currentGame.players,
+        engine,
+        dimensions,
+    ])
 }

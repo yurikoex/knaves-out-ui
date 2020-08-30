@@ -244,9 +244,10 @@ const generateNewGamePlayer = ({ id, name }) => ({
     placedLand: null,
     order: Math.floor(Math.random() * 1000000000),
     turns: 0,
-    worldZoomLevel: 0,
+    worldZoomLevel: 100,
     worldOffsetX: 0,
     worldOffsetY: 0,
+    worldPosition: { gridX: 0, gridY: 0 },
 })
 
 export default (gameState, setGameState) =>

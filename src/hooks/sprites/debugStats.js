@@ -14,6 +14,9 @@ Knave: ${currentPlayer.court.find((c) => c.type === 'knave').card}
 Queen: ${currentPlayer.court.find((c) => c.type === 'queen').card}
 King: ${currentPlayer.court.find((c) => c.type === 'king').card}
 AOS: ${currentPlayer.court.find((c) => c.type === 'aos').card}
+Zoom: ${currentPlayer.worldZoomLevel}
+OffsetX: ${currentPlayer.worldOffsetX}
+OffsetY: ${currentPlayer.worldOffsetY}
                 `.toUpperCase()
     const debugStats = new Text(debugText, {
         fontFamily: 'Fira Code',
