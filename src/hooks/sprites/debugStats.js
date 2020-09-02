@@ -17,6 +17,9 @@ AOS: ${currentPlayer.court.find((c) => c.type === 'aos').card}
 Zoom: ${currentPlayer.worldZoomLevel}
 OffsetX: ${currentPlayer.worldOffsetX}
 OffsetY: ${currentPlayer.worldOffsetY}
+Dragging: ${currentPlayer.dragging.active}
+DraggingX: ${currentPlayer.dragging.x}
+DraggingY: ${currentPlayer.dragging.y}
                 `.toUpperCase()
     const debugStats = new Text(debugText, {
         fontFamily: 'Fira Code',

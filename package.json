@@ -25,6 +25,7 @@
         "css-loader": "^4.2.1",
         "del-cli": "^3.0.1",
         "file-loader": "^6.0.0",
+        "hammerjs": "^2.0.8",
         "haunted": "^4.7.0",
         "html-webpack-plugin": "^4.3.0",
         "json-loader": "^0.5.7",

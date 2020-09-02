@@ -245,6 +245,7 @@ const generateNewGamePlayer = ({ id, name }) => ({
     order: Math.floor(Math.random() * 1000000000),
     turns: 0,
     worldZoomLevel: 100,
+    dragging: { active: false, x: 0, y: 0 },
     worldOffsetX: 0,
     worldOffsetY: 0,
     worldPosition: { gridX: 0, gridY: 0 },

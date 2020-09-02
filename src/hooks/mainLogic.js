@@ -6,6 +6,8 @@ const resources = loader.resources
 import debugStats from './sprites/debugStats'
 import world from './sprites/world'
 import endTurn from './sprites/endTurn'
+import resetView from './sprites/resetView'
+import mousewheel from './helpers/mousewheel'
 
 export default (gameState, dimensions, engine, setGameState) => {
     useEffect(() => {}, [])
@@ -23,29 +25,12 @@ export default (gameState, dimensions, engine, setGameState) => {
 
                 const currentPlayerWorldZoomLevel = currentPlayer.worldZoomLevel
 
-                const mouseWheelListener = ({ deltaY }) => {
-                    const newZoom = currentPlayerWorldZoomLevel + deltaY * 0.01
-
-                    console.log(newZoom, currentPlayerWorldZoomLevel, deltaY)
-                    setGameState((state) => ({
-                        ...state,
-                        currentGame: {
-                            ...state.currentGame,
-                            players: state.currentGame.players.map((player) =>
-                                player.id === currentPlayer.id
-                                    ? {
-                                          ...player,
-                                          worldZoomLevel: newZoom,
-                                      }
-                                    : { ...player }
-                            ),
-                        },
-                    }))
-                }
-
-                const scopedMouseWheelListener = (events) =>
-                    mouseWheelListener(events)
-                window.addEventListener('wheel', scopedMouseWheelListener)
+                const mouseWheelListener = mousewheel({
+                    currentPlayerWorldZoomLevel,
+                    setGameState,
+                    currentPlayer,
+                })
+                window.addEventListener('wheel', mouseWheelListener)
 
                 const worldSprite = world({
                     gameState,
@@ -61,24 +46,31 @@ export default (gameState, dimensions, engine, setGameState) => {
                     dimensions
                 )
 
-                const endTurnSprite = endTurn(
+                const endTurnSprite = endTurn({
                     gameState,
                     dimensions,
-                    setGameState
-                )
+                    setGameState,
+                })
+
+                const resetViewSprite = resetView({
+                    gameState,
+                    dimensions,
+                    setGameState,
+
+                    currentPlayer,
+                })
 
                 engine.stage.addChild(worldSprite)
                 engine.stage.addChild(endTurnSprite)
+                engine.stage.addChild(resetViewSprite)
                 engine.stage.addChild(debugStatsSprite)
 
                 return () => {
                     engine.stage.removeChild(worldSprite)
                     engine.stage.removeChild(endTurnSprite)
+                    engine.stage.removeChild(resetViewSprite)
                     engine.stage.removeChild(debugStatsSprite)
-                    window.removeEventListener(
-                        'wheel',
-                        scopedMouseWheelListener
-                    )
+                    window.removeEventListener('wheel', mouseWheelListener)
                 }
             }
         }
