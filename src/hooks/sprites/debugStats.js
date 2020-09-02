@@ -6,7 +6,7 @@ Round: ${currentTurn.round}
 ID: ${currentPlayer.id}
 Name: ${currentPlayer.name}
 Players Turn: ${currentPlayer.turns + 1}
-Placed Land: ${currentPlayer.placedLand}
+Placed Land: ${currentPlayer.placedLand.placed}
 Deck: ${currentPlayer.deck.length}
 Discard: ${currentPlayer.discard.length}
 Court In Play: ${currentPlayer.court.reduce((t, c) => (c.card ? t + 1 : t), 0)}
@@ -15,6 +15,8 @@ Queen: ${currentPlayer.court.find((c) => c.type === 'queen').card}
 King: ${currentPlayer.court.find((c) => c.type === 'king').card}
 AOS: ${currentPlayer.court.find((c) => c.type === 'aos').card}
 Zoom: ${currentPlayer.worldZoomLevel}
+GridX: ${currentPlayer.worldPosition.gridX}
+GridY: ${currentPlayer.worldPosition.gridY}
 OffsetX: ${currentPlayer.worldOffsetX}
 OffsetY: ${currentPlayer.worldOffsetY}
 Dragging: ${currentPlayer.dragging.active}

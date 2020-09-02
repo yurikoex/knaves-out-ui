@@ -8,6 +8,7 @@ import world from './sprites/world'
 import endTurn from './sprites/endTurn'
 import resetView from './sprites/resetView'
 import mousewheel from './helpers/mousewheel'
+import message from './sprites/message'
 
 export default (gameState, dimensions, engine, setGameState) => {
     useEffect(() => {}, [])
@@ -40,6 +41,14 @@ export default (gameState, dimensions, engine, setGameState) => {
                     currentPlayerWorldZoomLevel,
                 })
 
+                const messageSprite = message({
+                    actor: 'IceQueen',
+                    message:
+                        'You! Knave! Place\na land to help\rbuild the world\rof Dominatri!',
+                    active: currentPlayer.placedLand.placed,
+                    dimensions,
+                })
+
                 const debugStatsSprite = debugStats(
                     currentTurn,
                     currentPlayer,
@@ -63,12 +72,14 @@ export default (gameState, dimensions, engine, setGameState) => {
                 engine.stage.addChild(worldSprite)
                 engine.stage.addChild(endTurnSprite)
                 engine.stage.addChild(resetViewSprite)
+                engine.stage.addChild(messageSprite)
                 engine.stage.addChild(debugStatsSprite)
 
                 return () => {
                     engine.stage.removeChild(worldSprite)
                     engine.stage.removeChild(endTurnSprite)
                     engine.stage.removeChild(resetViewSprite)
+                    engine.stage.removeChild(messageSprite)
                     engine.stage.removeChild(debugStatsSprite)
                     window.removeEventListener('wheel', mouseWheelListener)
                 }

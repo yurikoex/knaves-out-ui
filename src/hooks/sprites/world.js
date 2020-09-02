@@ -6,6 +6,18 @@ export default ({ gameState, dimensions, setGameState, currentPlayer }) => {
     const gridWidth = 18
     const worldPixelSize = worldSize * gridWidth
 
+    const placedLands = gameState.currentGame.players.reduce(
+        (placedLands, player) => {
+            if (player.placedLand.placed) {
+                placedLands.push({ gridX: 0, gridY: 0 })
+            }
+            return placedLands
+        },
+        []
+    )
+
+    console.log(placedLands)
+
     const dot = new Graphics()
     dot.beginFill(0xffff00)
     dot.drawCircle(0, 0, gridWidth / 2)
@@ -56,10 +68,10 @@ export default ({ gameState, dimensions, setGameState, currentPlayer }) => {
     let clicked = false
     grid.on('click', (event) => {
         clicked = true
-        console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCLICK')
-        console.log(
-            `${currentPlayer.name} clicked x:${currentPlayer.worldPosition.gridX} y:${currentPlayer.worldPosition.gridY}`
-        )
+        // console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXCLICK')
+        // console.log(
+        //     `${currentPlayer.name} clicked x:${currentPlayer.worldPosition.gridX} y:${currentPlayer.worldPosition.gridY}`
+        // )
         // console.log(event)
     })
     grid.on('pointerdown', (event) => {
@@ -89,7 +101,7 @@ export default ({ gameState, dimensions, setGameState, currentPlayer }) => {
         )
     })
     grid.on('pointerup', () => {
-        console.log('Stop Dragging')
+        // console.log('Stop Dragging')
         setGameState((state) => ({
             ...state,
             currentGame: {
@@ -148,8 +160,8 @@ export default ({ gameState, dimensions, setGameState, currentPlayer }) => {
             } else {
                 //PLAYER DRAGGING
                 dot.visible = false
-                console.log(event.data.global.x - currentPlayer.dragging.x)
-                console.log(event.data.global.y - currentPlayer.dragging.y)
+                // console.log(event.data.global.x - currentPlayer.dragging.x)
+                // console.log(event.data.global.y - currentPlayer.dragging.y)
                 setGameState((state) => ({
                     ...state,
                     currentGame: {
