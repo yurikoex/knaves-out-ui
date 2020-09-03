@@ -241,7 +241,7 @@ const generateNewGamePlayer = ({ id, name }) => ({
         { type: 'king', card: null, joker: null, devoured: [], tower: [] },
         { type: 'aos', card: null, joker: null, devoured: [], tower: [] },
     ],
-    placedLand: { placed: false, x: 0, y: 0 },
+    placedLand: { placed: false, gridX: 0, gridY: 0 },
     order: Math.floor(Math.random() * 1000000000),
     turns: 0,
     worldZoomLevel: 100,

@@ -1,21 +1,33 @@
-import { Graphics } from 'pixi.js'
+import { Graphics, Loader, Sprite } from 'pixi.js'
+const loader = Loader.shared
+const resources = loader.resources
 
 export default ({ gameState, dimensions, setGameState, currentPlayer }) => {
     const worldSize = gameState.currentGame.worldSize
     const zoomLevelPercent = currentPlayer.worldZoomLevel / 100
     const gridWidth = 18
+    const boardWidth = 8
     const worldPixelSize = worldSize * gridWidth
 
     const placedLands = gameState.currentGame.players.reduce(
-        (placedLands, player) => {
-            if (player.placedLand.placed) {
-                placedLands.push({ gridX: 0, gridY: 0 })
+        (placedLands, { placedLand: { placed, gridX, gridY } }) => {
+            if (placed) {
+                placedLands.push({ gridX, gridY })
             }
             return placedLands
         },
         []
     )
 
+    const needsToPlace = !currentPlayer.placedLand.placed
+
+    const placeBoard = new Sprite(resources.sheet.textures['board.png'])
+    placeBoard.width = gridWidth * boardWidth
+    placeBoard.height = gridWidth * boardWidth
+    placeBoard.position.set(
+        currentPlayer.worldPosition.gridX * gridWidth + gridWidth / 2,
+        currentPlayer.worldPosition.gridY * gridWidth + gridWidth / 2
+    )
     console.log(placedLands)
 
     const dot = new Graphics()
@@ -188,12 +200,21 @@ export default ({ gameState, dimensions, setGameState, currentPlayer }) => {
     grid.on('mouseover', (event) => {
         over = true
         grid.addChild(dot)
+
+        if (needsToPlace) {
+            grid.addChild(placeBoard)
+        }
     })
     grid.on('mouseout', (event) => {
         over = false
         dot.visible = false
 
         grid.removeChild(dot)
+
+        if (needsToPlace) {
+            placeBoard.visible = false
+            grid.addChild(placeBoard)
+        }
     })
     return grid
 }
